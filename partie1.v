@@ -43,10 +43,11 @@ Definition cpred := \n · \f · \x · n (\ g· \ h · h (g f)) (\ u·x) (\ u·u)
 Compute equiv_lexp (cpred c4) c3.
 Compute equiv_lexp (cpred c2) c1.
 
+(*TODO : fact works for n*n-1 only*)
+Definition cfact := \n  · (ceq0 n) (cmult n ( ( cpred n))) c1 . 
+Definition cf := (\ x · x ) cfact.
+Compute show_cbn (cf c3).
+Compute equiv_lexp (cf c3) c6.
 
-Definition cfg := \r · \n·(ceq0 n (cadd n (r r cpred n))  c1)  .
-Definition cfact := (\x·x x) cfg.
 
-Compute show_cbn (cfact c2).
-Compute equiv_lexp (cfact c3) c6.
-3+2+1+0
+
