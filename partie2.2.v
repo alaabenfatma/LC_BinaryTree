@@ -47,3 +47,6 @@ Definition disjonc : pbool -> pbool -> pbool := fun a b => a pbool a b.
 (*3 si vrai. 5, sinon.*)
 Definition foo35 : pbool -> nat := fun b => b nat 5 3.
 Compute foo35 ptr.
+
+(*BONUS : lui-meme*)
+Definition bluimeme : pbool -> pbool := fun b => b pbool b b.
