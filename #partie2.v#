@@ -1,7 +1,8 @@
 (*2eme partie*)
 (*booleans*)
-Section booleans.
 Variable T: Set.
+Section booleans.
+
 Definition cbool := T -> T -> T.
 Definition ccond := cbool -> T -> T -> T.
 (*true*)
@@ -20,7 +21,6 @@ Definition cor : cbool -> cbool -> cbool := fun a b x y =>  a x (b x y).
 End booleans.
 
 Section entiers.
-Variable T : Set.
 Definition cnat := (T->T) -> (T->T).
 Definition c0 : cnat := fun f x => x.
 Definition c1 : cnat := fun f x => f x.
@@ -34,5 +34,7 @@ Compute csucc c2.
 Definition cadd : cnat -> cnat -> cnat:= fun n m f x => n f (m f x).
 (*test c3 + c1. il faut trouver c4 comme result (4 x)*)
 Compute cadd c3 c1.
-
+Definition cmult : cnat -> cnat -> cnat  := fun n m f  => n (m f).
+Compute cmult c2 c3.
+Definition ceq0 : cnat -> cbool  := fun n x y z=> n (z)x.
 End entiers.
