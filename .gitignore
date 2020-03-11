@@ -17,7 +17,6 @@
 *.o
 *.v.d
 *.vio
-*.vo
 *.vok
 *.vos
 .coq-native/
