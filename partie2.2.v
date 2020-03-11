@@ -2,6 +2,7 @@
 (* ATTENTION !!!!!
 Il faut lancer coqide avec la cmd = coqide -impredicative-set*) 
 (*L'identité polymorphe*)
+(*2.2.1*)
 Definition tid : Set := forall T : Set, T -> T.
 Definition id : tid := fun T:Set => fun x : T => x.
 
@@ -21,3 +22,12 @@ false => 0 end.
 Compute id nat (nbtrue1 false).
 
 Compute id tid id.
+(*2.2.2*)
+Definition pbool : Set := forall T : Set, T -> T -> T.
+Definition ptr : pbool := fun T:Set => fun x y: T => x.
+Definition pfa : pbool := fun T:Set => fun x y: T => y.
+Print ptr.
+Print pfa.
+(*first negation*)
+
+(*second negation*)
