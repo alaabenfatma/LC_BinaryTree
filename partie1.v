@@ -48,10 +48,10 @@ Compute equiv_lexp (cpred c4) c3.
 Compute equiv_lexp (cpred c2) c1.
 
 
-Definition cf := \f · \n  · ((ceq0 n) (cmult n (f( cpred n))) c1) .
+Definition cf := \f · \n  · ((ceq0 n) (cpred n (f( cpred n))) c1) .
 Definition Y := \f·(\x·f(x x)) (\x·f (x x)).
 Definition cfact := Y cf.
-Compute show_cbn (cfact c2).
+Compute show_cbn (cfact c3).
 (*Compute equiv_lexp (cf c3) c6.*)
 
 
