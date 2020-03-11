@@ -20,14 +20,21 @@ false => 0 end.
 
 (*Verif : la fonction rend bien un nat*)
 Compute id nat (nbtrue1 false).
-
 Compute id tid id.
+
 (*2.2.2*)
+
 Definition pbool : Set := forall T : Set, T -> T -> T.
-Definition ptr : pbool := fun T:Set => fun x y: T => x.
-Definition pfa : pbool := fun T:Set => fun x y: T => y.
+Definition ptr : pbool := fun T:Set => fun x:T => fun y:T => y .
+Definition pfa : pbool := fun T:Set => fun (x:T) (y:T) => x.
 Print ptr.
 Print pfa.
-(*first negation*)
 
+(*first negation*)
+Definition cneg1 : pbool -> pbool := fun b => fun T:Set => fun x => fun y => b T x y.
+
+Compute cneg1 ptr.
 (*second negation*)
+Definition cneg2 : pbool -> pbool:= fun b => b pbool pfa ptr.
+
+Compute cneg2 ptr.
