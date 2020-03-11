@@ -38,3 +38,12 @@ Compute cneg1 ptr.
 Definition cneg2 : pbool -> pbool:= fun b => b pbool pfa ptr.
 
 Compute cneg2 ptr.
+
+(*conj*)
+Definition conjonc : pbool -> pbool -> pbool := fun a b => a pbool b a.
+(*disonj*)
+Definition disjonc : pbool -> pbool -> pbool := fun a b => a pbool a b.
+
+(*3 si vrai. 5, sinon.*)
+Definition foo35 : pbool -> nat := fun b => b nat 5 3.
+Compute foo35 ptr.
