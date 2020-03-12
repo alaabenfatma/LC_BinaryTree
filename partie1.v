@@ -43,17 +43,14 @@ Definition inj2 := \x · \k l · l x.
 
 (*predecessor*)
 Definition cpred := \n · \f · \x · n (\ g· \ h · h (g f)) (\ u·x) (\ u·u).
-
+Compute show_cbn (cpred c9).
 Compute equiv_lexp (cpred c4) c3.
 Compute equiv_lexp (cpred c2) c1.
 
-
-Definition cf := \f · \n  · ((ceq0 n) (cpred n (f( cpred n))) c1) .
-Definition Y := \f·(\x·f(x x)) (\x·f (x x)).
-Definition cfact := Y cf.
-Compute show_cbn (cfact c3).
-(*Compute equiv_lexp (cf c3) c6.*)
-
+(*factorial*)
+Definition fact := \n ·\f ·n(\f ·\n ·n(f(\f ·\x ·n f(f x))))(\x ·f)(\x ·x).
+Compute show_cbn (fact c3).
+Compute equiv_lexp (fact c3) c6.
 
 
 
