@@ -9,6 +9,7 @@ Definition cfa := \ x y· y.
 Definition cif := \ x y z· x y z.
 Definition cand := \ a b· \x y · a (b a b)y.
 Definition cor := \a b·\x y·a x(b x  y).
+Definition corif := \ a b · \ x y · cif a x ( b x y).
 Definition test := \x · \y · cif ctr x y.
 (*codage de quelques constantes 0, 1, 2, 3.*)
 Definition c0 := \f x·x.
