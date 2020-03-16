@@ -9,6 +9,7 @@ Definition cfa := \ x y· y.
 Definition cif := \ x y z· x y z.
 Definition cand := \ a b· \x y · a (b a b)y.
 Definition cor := \a b·\x y·a x(b x  y).
+Definition cneg := \b · b cfa ctr.
 Definition test := \x · \y · cif ctr x y.
 (*codage de quelques constantes 0, 1, 2, 3.*)
 Definition c0 := \f x·x.
@@ -49,8 +50,9 @@ Compute equiv_lexp (cpred c4) c3.
 Compute equiv_lexp (cpred c2) c1.
 
 (*factorial*)
+(*(λ n f · ((n (λ f n · n (f (λ f x · (n f) (f x))))) (λ x · f)) (λ x · x))*)
 Definition fact := \n ·\f ·n(\f ·\n ·n(f(\f ·\x ·n f(f x))))(\x ·f)(\x ·x).
-Compute show_cbn (fact c3).
+Compute show_cbn fact.
 Compute equiv_lexp (fact c3) c6.
 
 
