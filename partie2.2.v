@@ -50,3 +50,18 @@ Compute foo35 ptr.
 
 (*BONUS : lui-meme*)
 Definition bluimeme : pbool -> pbool := fun b => b pbool b b.
+
+(*2.2.3.1*)
+(*A -> B -> T) ->T*)
+Definition pprod_nb : Set := forall T: Set, (nat -> bool -> T) -> T.
+Definition pcpl_nb : nat -> bool -> pprod_nb := fun a b => fun T => fun k => k a b.
+(*2.2.3.2*)
+Definition pprod_bn : Set := forall T: Set, (bool -> nat -> T) -> T.
+Definition pcpl_bn : bool -> nat -> pprod_bn := fun a b => fun T => fun k => k a b.
+(*2.2.3.3*)
+Definition convertProd : pprod_nb -> pprod_bn := fun c => c pprod_bn (fun n b => pcpl_bn b n).
+(*TEST : (5,true) => (true, 5)*)
+Definition c1 := pcpl_nb 5 true.
+Definition res := convertProd c1.
+Compute c1.
+Compute res.

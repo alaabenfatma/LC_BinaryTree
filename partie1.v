@@ -44,8 +44,9 @@ Definition inj1 := \x · \k l · k x.
 Definition inj2 := \x · \k l · l x.
 
 (*predecessor*)
+(*(λ n f x · ((n (λ g h · h (g f))) (λ u · x)) (λ u · u))*)
 Definition cpred := \n · \f · \x · n (\ g· \ h · h (g f)) (\ u·x) (\ u·u).
-Compute show_cbn (cpred c9).
+Compute show_cbn (cpred ).
 Compute equiv_lexp (cpred c4) c3.
 Compute equiv_lexp (cpred c2) c1.
 
