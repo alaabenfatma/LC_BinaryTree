@@ -1,3 +1,4 @@
+
 (*partie 2.2*)
 (* ATTENTION !!!!!
 Il faut lancer coqide avec la cmd = coqide -impredicative-set*) 
@@ -65,3 +66,9 @@ Definition c1 := pcpl_nb 5 true.
 Definition res := convertProd c1.
 Compute c1.
 Compute res.
+Definition pprod : Set -> Set -> Set := fun A B => forall T:Set, (A -> B -> T) -> T.
+Definition pcpl : forall A B:Set, A -> B -> pprod A B := fun A B:Set => fun (a:A) (b:B) => fun T:Set => fun k:(A -> B -> T) => k a b.
+
+Compute pcpl nat bool 99 true.
+Compute pcpl nat nat 1 0.
+Compute pcpl pbool nat ptr (foo35 ptr).
