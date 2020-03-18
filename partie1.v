@@ -1,3 +1,4 @@
+
 (*partie1*)
 
 Require Import untypedLC.
@@ -14,15 +15,16 @@ Definition test := \x · \y · cif ctr x y.
 (*codage de quelques constantes 0, 1, 2, 3.*)
 Definition c0 := \f x·x.
 Definition c1 := \f x ·f x.
-Definition c2 := \f x· f ( f x ).
-Definition c3 := \f x· f ( f (f x) ).
-Definition c4 := \f x· f ( f (f (f x)) ).
-Definition c5 := \f x· f ( f (f (f (f x)) )).
+Definition c2 := \f x· f ( c1 f x ).
+Definition c3 := \f x· f ( c2 f x ).
+Definition c4 := \f x· f ( c3 f x ).
+Definition c5 := \f x· f ( c4 f x).
 (* THE REST IS JUST FOR FUN :-) *)
-Definition c6 := \f x· f ( f (f (f (f (f x)) ))).
-Definition c7 := \f x· f ( f (f (f (f (f (f x)) )))).
-Definition c8 := \f x· f ( f (f (f (f (f (f (f x)) ))))).
-Definition c9 := \f x· f ( f (f (f (f (f (f (f (f x)) )))))).
+Definition c6 := \f x· f ( c5 f x).
+Definition c7 := \f x· f ( c6 f x).
+Definition c8 := \f x· f ( c7 f x).
+Definition c9 := \f x· f ( c8 f x).
+Definition c10 := \f x· f ( c9 f x).
 (*opérations successeur, addition et multiplica-tion, 
 et du test à 0*)
 Definition csucc := \n · \ f x·f(n f x).
@@ -44,11 +46,13 @@ Definition inj1 := \x · \k l · k x.
 Definition inj2 := \x · \k l · l x.
 
 (*predecessor*)
-(*(λ n f x · ((n (λ g h · h (g f))) (λ u · x)) (λ u · u))*)
-Definition cpred := \n · \f · \x · n (\ g· \ h · h (g f)) (\ u·x) (\ u·u).
+(*On retourne c0 si la valeur = 1 ou 0. Sinon, on cherche n-1 d'une maniere iterative. *)
+Definition cpred := \n · n (\g · \k · ceq0  k (cadd (g k) c1) (g c1)) (\a · c0) c0.
 Compute show_cbn (cpred ).
 Compute equiv_lexp (cpred c4) c3.
 Compute equiv_lexp (cpred c2) c1.
+(* PRED DE 0 ?? . IL FAUT RETORUNER  0 !*)
+Compute equiv_lexp (cpred c0) c0.
 
 (*factorial*)
 (*(λ n f · ((n (λ f n · n (f (λ f x · (n f) (f x))))) (λ x · f)) (λ x · x))*)

@@ -103,6 +103,31 @@ Definition inj2 (A B : Set) : B -> psom A B := fun b => fun T:Set => fun k1 : (A
 
 (*2.2.4  Entiers de Church avec typage polymorphe *)
 
+(*Base form*)
+(*On a re-utilisé les definitions de la partie1.v*)
 Definition pnat := forall (T:Set), (T->T) -> (T->T).
 Definition p0 : pnat := fun (T:Set) => fun (f:T->T) => fun (x:T) => x.
+Definition p1 : pnat := fun (T:Set) => fun (f:T->T) => fun (x:T) => f x.
+Definition p2 : pnat := fun (T:Set) => fun (f:T->T) => fun (x:T) => f (f x).
+Definition p3 : pnat := fun (T:Set) => fun (f:T->T) => fun (x:T) => f (f (f x)).
 Definition pS : pnat -> pnat :=  fun (n: pnat) => fun (T : Set) f  x => f (n  T f x).
+(*Definition cadd := \n m·\f x·n f(m f x).*)
+Definition padd : pnat -> pnat -> pnat := fun n m => fun f x => n f (m f x ).
+(* 2 + 3 = 5 *)
+Compute padd p2 p3.
+(*Definition ceq0 := \n·\x y· n(\z·x) y.*)
+Definition pmult : pnat -> pnat -> pnat := fun m n =>  fun T:Set => (fun f => n T (m T f)).
+(* 2 X 3 = 6 *)
+Compute pmult p2 p3.
+(*Definition ceq0 := \n·\x y· n(\z·x) y.*)
+Definition peq0 : pnat -> pbool := fun n => fun T:Set => fun (x:T) (y:T) => (n T (fun z => y) x).
+(* 3 X 0 == 0 ? *)
+Compute peq0 (pmult p3 p0).
+(* 3 == 0 ? *)
+Compute peq0  p3.
+
+(* special pplus *)
+Definition pplus : pnat -> pnat -> pnat := fun n : pnat => fun m : pnat =>  n pnat pS m.
+(* Test : 1 + 3 *)
+Compute pplus p1 p3.
+
