@@ -100,3 +100,9 @@ Definition psom (A B : Set) : Set := forall T:Set, (A -> T) -> (B -> T) -> T.
 Definition inj1 (A B : Set) : A -> psom A B := fun a => fun T:Set => fun k1 : (A ->  T) => fun k2 : (B ->  T) => k1 a.
 (*Inspirée par inj1*)
 Definition inj2 (A B : Set) : B -> psom A B := fun b => fun T:Set => fun k1 : (A ->  T) => fun k2 : (B ->  T) => k2 b.
+
+(*2.2.4  Entiers de Church avec typage polymorphe *)
+
+Definition pnat := forall (T:Set), (T->T) -> (T->T).
+Definition p0 : pnat := fun (T:Set) => fun (f:T->T) => fun (x:T) => x.
+Definition pS : pnat -> pnat :=  fun (n: pnat) => fun (T : Set) f  x => f (n  T f x).
