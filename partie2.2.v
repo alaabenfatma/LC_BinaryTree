@@ -94,4 +94,9 @@ Compute pcpl nat nat 1 0.
 Compute pcpl pbool nat ptr (foo35 ptr).
 
 
-(*Choix Sommes de Types*)
+(*Choix (Sommes de Types) *)
+(*On a juste implementé ça : A+B = ∀T, (A→T)→(B→T)→T.)*)
+Definition psom (A B : Set) : Set := forall T:Set, (A -> T) -> (B -> T) -> T.
+Definition inj1 (A B : Set) : A -> psom A B := fun a => fun T:Set => fun k1 : (A ->  T) => fun k2 : (B ->  T) => k1 a.
+(*Inspirée par inj1*)
+Definition inj2 (A B : Set) : B -> psom A B := fun b => fun T:Set => fun k1 : (A ->  T) => fun k2 : (B ->  T) => k2 b.
