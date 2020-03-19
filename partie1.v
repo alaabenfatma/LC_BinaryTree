@@ -28,26 +28,48 @@ Definition c10 := \f x· f ( c9 f x).
 (*opérations successeur, addition et multiplica-tion, 
 et du test à 0*)
 Definition csucc := \n · \ f x·f(n f x).
+(* succ c9 = c10 ? *)
+Compute equiv_lexp (csucc c9) c10.
 Definition cadd := \n m·\f x·n f(m f x).
+(* c8 + c1 = c10 ? *)
+Compute equiv_lexp (cadd c9 c1) c10.
 Definition cmult := \n m · \f· n(m f).
-Definition ceq0 := \n·\x y· n(\z·x) y.
-
+(* c2 + c5 = c10 ? *)
+Compute equiv_lexp (cmult c2 c5) c10.
+Definition ceq0 := \n·\x y· n(\z·y) x.
+(* c0 = c0 *)
+Compute equiv_lexp (ceq0 c0) ctr.
 (*couples*)
 Definition cpl := \x1 x2 · \k · k x1 x2.
 
 (*operation sur couples*)
+(*voir tests au-dessous*)
 Definition kfst := \x1 x2 · x1.
 Definition ksnd := \x1 x2 · x2.
 Definition fst := \c · c  kfst.
 Definition snd := \c · c  ksnd.
 
+
 (*Injection*)
 Definition inj1 := \x · \k l · k x.
 Definition inj2 := \x · \k l · l x.
 
+(*TEST COUPLES*)
+Definition cc := cpl c5 c9.
+Compute equiv_lexp (cc kfst) c5.
+Compute equiv_lexp (cc ksnd) c9.
+Compute equiv_lexp (fst cc) c5.
+Compute equiv_lexp (snd cc) c9.
+
 (*predecessor*)
-(*On retourne c0 si la valeur = 1 ou 0. Sinon, on cherche n-1 d'une maniere iterative. *)
-Definition cpred := \n · n (\g · \k · ceq0  k (cadd (g k) c1) (g c1)) (\a · c0) c0.
+(* EXPLICATION : 
+On commence par un entien N.
+si N = 1 ou 0. On retourne 0.
+Sinon, on ajoute +1 a notre variable SECOND jusqu'a x = n-1 
+C'est grace a l'usage de couples
+i.e : 5 (0,0) -> 5 (0,1) -> 5 (1,2) -> 5 (2,3) -> 5 (3,4) -> 5 (4,5) <=> 4 ! *)
+Definition iter := \x · cpl (snd x) (csucc (snd x)).
+Definition cpred := \n · fst ( n iter (cpl c0 c0)).
 Compute show_cbn (cpred ).
 Compute equiv_lexp (cpred c4) c3.
 Compute equiv_lexp (cpred c2) c1.
@@ -55,10 +77,12 @@ Compute equiv_lexp (cpred c2) c1.
 Compute equiv_lexp (cpred c0) c0.
 
 (*factorial*)
-(*(λ n f · ((n (λ f n · n (f (λ f x · (n f) (f x))))) (λ x · f)) (λ x · x))*)
-Definition fact := \n ·\f ·n(\f ·\n ·n(f(\f ·\x ·n f(f x))))(\x ·f)(\x ·x).
-Compute show_cbn fact.
-Compute equiv_lexp (fact c3) c6.
+(*The Y combinator*)
+Definition Y := \f·(\x·f( x x)) (\x · f (x x)).
+(*if n = 1, return 1, else cmult n * (n-1)*)
+Definition cfonc := \r·\n·cif (ceq0 n) c1 (cmult n (r (cpred n))) .
+Definition cfact := Y cfonc.
+Compute equiv_lexp (cfact c3) c6.
 
 
 
