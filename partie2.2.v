@@ -3,6 +3,7 @@
 (* ATTENTION !!!!!
 Il faut lancer coqide avec la cmd = coqide -impredicative-set*) 
 (*L'identité polymorphe*)
+
 (*2.2.1*)
 Definition tid : Set := forall T : Set, T -> T.
 Definition id : tid := fun T:Set => fun x : T => x.
@@ -27,22 +28,22 @@ Compute id tid id.
 (*booleans*)
 Definition pbool : Set := forall T : Set, T -> T -> T.
 (*vrai*)
-Definition ptr : pbool := fun T:Set => fun x:T => fun y:T => y .
+Definition ptr : pbool := fun T:Set => fun x:T => fun y:T => x .
 (*faux*)
-Definition pfa : pbool := fun T:Set => fun (x:T) (y:T) => x.
+Definition pfa : pbool := fun T:Set => fun (x:T) (y:T) => y.
 Print ptr.
 Print pfa.
 
 (*first negation*)
-Definition cneg1 : pbool -> pbool := fun b => fun T:Set => fun x => fun y => b T x y.
+Definition cneg1 : pbool -> pbool := fun b => fun T:Set => fun x => fun y => b T y x.
 
 Compute cneg1 ptr.
-
+Compute cneg1 pfa.
 (*second negation*)
 Definition cneg2 : pbool -> pbool:= fun b => b pbool pfa ptr.
 
 Compute cneg2 ptr.
-
+Compute cneg2 pfa.
 (*conj*)
 Definition conjonc : pbool -> pbool -> pbool := fun a b => a pbool b a.
 Compute conjonc ptr pfa.
@@ -56,7 +57,7 @@ Compute disjonc pfa ptr.
 
 
 (*3 si vrai. 5, sinon.*)
-Definition foo35 : pbool -> nat := fun b => b nat 5 3.
+Definition foo35 : pbool -> nat := fun b => b nat 3 5.
 Compute foo35 ptr.
 
 (*BONUS : lui-meme*)

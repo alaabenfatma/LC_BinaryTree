@@ -12,11 +12,14 @@ Definition cfa : cbool := fun x y => y.
 Definition cif : ccond := fun x y z => x y z.
 (*not*)
 Definition cnot : cbool -> cbool := fun b x y => b y x.
+Compute cnot ctr.
+Compute cnot cfa.
 (*and*)
 Definition cand : cbool -> cbool -> cbool := fun a b x y => a (b x y) y.
+Compute cand cfa ctr.
 (*or*)
 Definition cor : cbool -> cbool -> cbool := fun a b x y =>  a x (b x y).
-
+Compute cor cfa ctr.
 End booleans.
 
 Section entiers.
