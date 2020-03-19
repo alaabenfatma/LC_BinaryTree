@@ -66,7 +66,7 @@ Definition inj2 := \x · \k l · l x.
 (*Injected value = number of occurances of the f in the right-side of the equation*)
 Compute show_cbn (inj1 (cpl c1 c0) c3).
 
-(*predecessor*)
+(*predecesseur*)
 (* EXPLICATION : 
 On prend un entier N.
 si N = 1 ou 0. On retourne 0.

@@ -1,0 +1,162 @@
+
+(*partie 2.2*)
+(* ATTENTION !!!!!
+Il faut lancer coqide avec la cmd = coqide -impredicative-set*) 
+(*L'identité polymorphe*)
+
+(*2.2.1*)
+Definition tid : Set := forall T : Set, T -> T.
+Definition id : tid := fun T:Set => fun x : T => x.
+
+(*TESTS OF IDENTITY*)
+(* 5 est nat? *)
+Compute id nat 5.
+(* true est boolean? *)
+Compute id bool true.
+(* BAD TEST | UNCOMMENT *)
+(*Compute id bool 0.*)
+
+Definition nbtrue1 := 
+fun b => match b with true => 1 | 
+false => 0 end.
+
+(*Verif : la fonction rend bien un nat*)
+Compute id nat (nbtrue1 false).
+Compute id tid id.
+
+(*2.2.2*)
+(*booleans*)
+Definition pbool : Set := forall T : Set, T -> T -> T.
+(*vrai*)
+Definition ptr : pbool := fun T:Set => fun x:T => fun y:T => x .
+(*faux*)
+Definition pfa : pbool := fun T:Set => fun (x:T) (y:T) => y.
+Print ptr.
+Print pfa.
+
+(*first negation*)
+Definition cneg1 : pbool -> pbool := fun b => fun T:Set => fun x => fun y => b T y x.
+
+Compute cneg1 ptr.
+Compute cneg1 pfa.
+(*second negation*)
+Definition cneg2 : pbool -> pbool:= fun b => b pbool pfa ptr.
+
+Compute cneg2 ptr.
+Compute cneg2 pfa.
+(*conj*)
+Definition conjonc : pbool -> pbool -> pbool := fun a b => a pbool b a.
+Compute conjonc ptr pfa.
+Compute conjonc pfa ptr.
+Compute conjonc ptr ptr.
+
+(*disonj*)
+Definition disjonc : pbool -> pbool -> pbool := fun a b => a pbool a b.
+
+Compute disjonc ptr pfa.
+Compute disjonc pfa ptr.
+Compute disjonc pfa pfa.
+
+(*3 si vrai. 5, sinon.*)
+Definition foo35 : pbool -> nat := fun b => b nat 3 5.
+Compute foo35 ptr.
+Compute foo35 pfa.
+
+(*BONUS : lui-meme*)
+Definition bluimeme : pbool -> pbool := fun b => b pbool b b.
+Compute bluimeme ptr.
+Compute bluimeme pfa.
+(*C'est la fonction d'identité.*)
+
+(*2.2.3.1*)
+
+(*A -> B -> T) ->T*)
+Definition pprod_nb : Set := forall T: Set, (nat -> bool -> T) -> T.
+Definition pcpl_nb : nat -> bool -> pprod_nb := fun a b => fun T => fun k => k a b.
+
+(* (5,true) *)
+Compute pcpl_nb 5 true.
+(*2.2.3.2*)
+Definition pprod_bn : Set := forall T: Set, (bool -> nat -> T) -> T.
+Definition pcpl_bn : bool -> nat -> pprod_bn := fun a b => fun T => fun k => k a b.
+(* (true,5) *)
+Compute pcpl_bn true 5.
+
+(*2.2.3.3*)
+Definition convertProd : pprod_nb -> pprod_bn := fun c => c pprod_bn (fun n b => pcpl_bn b n).
+(*TEST : (5,true) => (true, 5)*)
+Definition c1 := pcpl_nb 5 true.
+Definition res := convertProd c1.
+Compute c1.
+Compute res.
+(*produit universel*)
+Definition pprod : Set -> Set -> Set := fun A B => forall T:Set, (A -> B -> T) -> T.
+Definition pcpl : forall A B:Set, A -> B -> pprod A B := fun A B:Set => fun (a:A) (b:B) => fun T:Set => fun k:(A -> B -> T) => k a b.
+(* couple = (99,true) *)
+Compute pcpl nat bool 99 true.
+(* couple = (1,0) *)
+Compute pcpl nat nat 1 0.
+(* couple = (1,(3, si vrai, 5 sinon) *)
+Compute pcpl pbool nat ptr (foo35 ptr).
+
+
+(*Choix (Sommes de Types) *)
+(*On a juste implementé ça : A+B = ∀T, (A→T)→(B→T)→T.)*)
+Definition psom (A B : Set) : Set := forall T:Set, (A -> T) -> (B -> T) -> T.
+Definition inj1 (A B : Set) : A -> psom A B := fun a => fun T:Set => fun k1 : (A ->  T) => fun k2 : (B ->  T) => k1 a.
+(*Inspirée par inj1*)
+Definition inj2 (A B : Set) : B -> psom A B := fun b => fun T:Set => fun k1 : (A ->  T) => fun k2 : (B ->  T) => k2 b.
+
+(*2.2.4  Entiers de Church avec typage polymorphe *)
+
+(*Base form*)
+(*On a re-utilisé les definitions de la partie1.v*)
+Definition pnat := forall (T:Set), (T->T) -> (T->T).
+Definition p0 : pnat := fun (T:Set) => fun (f:T->T) => fun (x:T) => x.
+Definition pS : pnat -> pnat :=  fun (n: pnat) => fun (T : Set) f  x => f (n  T f x).
+(*Definition de 1 2 et 3 on utilisant pS*)
+Definition p1 := pS p0.
+Definition p2 := pS p1.
+Definition p3 := pS p2.
+(*Definition cadd := \n m·\f x·n f(m f x).*)
+Definition padd : pnat -> pnat -> pnat := fun n m => fun f x => n f (m f x ).
+(* 2 + 2 = 4 *)
+Compute padd p2 p2.
+(*Definition cmult := \n m · \f· n(m f).*)
+Definition pmult : pnat -> pnat -> pnat := fun m n =>  fun T:Set => (fun f => n T (m T f)).
+(* 2 X 3 = 6 *)
+Compute pmult p2 p3.
+(*Definition ceq0 := \n·\x y· n(\z·x) y.*)
+Definition peq0 : pnat -> pbool := fun n => fun T:Set => fun (x:T) (y:T) => (n T (fun z => y) x).
+(* 3 X 0 == 0 ? *)
+Compute peq0 (pmult p3 p0).
+(* 3 == 0 ? *)
+Compute peq0  p3.
+
+(* special pplus *)
+Definition pplus : pnat -> pnat -> pnat := fun n : pnat => fun m : pnat =>  n pnat pS m.
+(* Test : 1 + 3 *)
+Compute pplus p1 p3.
+
+(*prédécesseur : We did not implement it... No time :-( *)
+
+(* 2.2.5  Listes (bonus) *)
+(*On a fait que la premiere question.*)
+(*listen = ∀T, T→(pnat→T→T)→T.*)
+Definition listen : Set := forall T: Set, T -> (pnat -> T -> T) -> T.
+(*liste A = ∀T, T→(A→T→T)→T.*)
+(*L'espace entre liste et A EST MANDATORY.*) 
+Definition liste A : Set := forall T: Set, T -> (A -> T -> T) -> T.
+(*pnil A :liste A = ΛT.λxTcA→T→T.x*)
+Definition pnil A : liste A := fun T:Set => fun x : T => fun c : (A -> T -> T) =>x.
+(*pcons A :  A→ liste A →liste A = λaAq liste A.ΛT.λxTcA→T→T.c a(qTx c).*)
+Definition pcons A : A -> liste A -> liste A :=  fun (a : A) (q : liste A) => fun T: Set => fun (x:T) (c : A -> T -> T)=> c a (q T x c).
+
+
+(*2.2.6  Super bonus : arbres binaires et tri par arbre binaire de recherche*)
+(*Reference*)
+Definition arbin (A : Set) := forall T: Set, T -> (T -> A -> T -> T) -> T.
+(*arbre Vide.*)
+Definition pV (A:Set) := fun T:Set=> fun x : T => fun c : T -> A -> T -> T=> x.
+(*le nœud comprenant un sous-arbre gauche, un habitant de A et un sous-arbre droit*)
+Definition pN (A : Set):= fun (g : arbin A) (a : A) (d : arbin A) => fun T : Set  => fun(x : T) (c : T -> A -> T -> T) => c (g T x c) a (d T x c ). 
