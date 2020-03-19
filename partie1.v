@@ -9,9 +9,13 @@ Definition cfa := \ x y· y.
 (*boolean functions*)
 Definition cif := \ x y z· x y z.
 Definition cand := \ a b· \x y · a (b a b)y.
+Compute equiv_lexp (cand cfa ctr) cfa.
 Definition cor := \a b·\x y·a x(b x  y).
+Compute equiv_lexp (cor cfa ctr) ctr.
 Definition cneg := \b · b cfa ctr.
+Compute equiv_lexp (cneg cfa) ctr.
 Definition test := \x · \y · cif ctr x y.
+
 (*codage de quelques constantes 0, 1, 2, 3.*)
 Definition c0 := \f x·x.
 Definition c1 := \f x ·f x.
@@ -31,10 +35,10 @@ Definition csucc := \n · \ f x·f(n f x).
 (* succ c9 = c10 ? *)
 Compute equiv_lexp (csucc c9) c10.
 Definition cadd := \n m·\f x·n f(m f x).
-(* c8 + c1 = c10 ? *)
+(* c9 + c1 = c10 ? *)
 Compute equiv_lexp (cadd c9 c1) c10.
 Definition cmult := \n m · \f· n(m f).
-(* c2 + c5 = c10 ? *)
+(* c2 * c5 = c10 ? *)
 Compute equiv_lexp (cmult c2 c5) c10.
 Definition ceq0 := \n·\x y· n(\z·y) x.
 (* c0 = c0 *)
@@ -48,12 +52,6 @@ Definition kfst := \x1 x2 · x1.
 Definition ksnd := \x1 x2 · x2.
 Definition fst := \c · c  kfst.
 Definition snd := \c · c  ksnd.
-
-
-(*Injection*)
-Definition inj1 := \x · \k l · k x.
-Definition inj2 := \x · \k l · l x.
-
 (*TEST COUPLES*)
 Definition cc := cpl c5 c9.
 Compute equiv_lexp (cc kfst) c5.
@@ -61,9 +59,16 @@ Compute equiv_lexp (cc ksnd) c9.
 Compute equiv_lexp (fst cc) c5.
 Compute equiv_lexp (snd cc) c9.
 
+(*Injection*)
+Definition inj1 := \x · \k l · k x.
+Definition inj2 := \x · \k l · l x.
+(*INJECTION TEST *)
+(*Injected value = number of occurances of the f in the right-side of the equation*)
+Compute show_cbn (inj1 (cpl c1 c0) c3).
+
 (*predecessor*)
 (* EXPLICATION : 
-On commence par un entien N.
+On prend un entier N.
 si N = 1 ou 0. On retourne 0.
 Sinon, on ajoute +1 a notre variable SECOND jusqu'a x = n-1 
 C'est grace a l'usage de couples
