@@ -63,10 +63,12 @@ Compute foo35 ptr.
 Compute foo35 pfa.
 
 (*BONUS : lui-meme*)
-Definition bluimeme : pbool -> pbool := fun b => b pbool b b.
-Compute bluimeme ptr.
-Compute bluimeme pfa.
-(*C'est la fonction d'identité.*)
+Definition bluimeme := fun (b:pbool) => b pbool b. 
+Compute bluimeme ptr pfa.
+Compute bluimeme pfa ptr.
+Compute bluimeme pfa pfa.
+Compute bluimeme ptr ptr.
+(*C'est la fonction OR .*)
 
 (*2.2.3.1*)
 

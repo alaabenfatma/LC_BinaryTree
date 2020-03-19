@@ -48,20 +48,25 @@ Compute cneg2 pfa.
 Definition conjonc : pbool -> pbool -> pbool := fun a b => a pbool b a.
 Compute conjonc ptr pfa.
 Compute conjonc pfa ptr.
+Compute conjonc ptr ptr.
 
 (*disonj*)
 Definition disjonc : pbool -> pbool -> pbool := fun a b => a pbool a b.
 
 Compute disjonc ptr pfa.
 Compute disjonc pfa ptr.
-
+Compute disjonc pfa pfa.
 
 (*3 si vrai. 5, sinon.*)
 Definition foo35 : pbool -> nat := fun b => b nat 3 5.
 Compute foo35 ptr.
+Compute foo35 pfa.
 
 (*BONUS : lui-meme*)
 Definition bluimeme : pbool -> pbool := fun b => b pbool b b.
+Compute bluimeme ptr.
+Compute bluimeme pfa.
+(*C'est la fonction d'identité.*)
 
 (*2.2.3.1*)
 
@@ -115,8 +120,8 @@ Definition p2 := pS p1.
 Definition p3 := pS p2.
 (*Definition cadd := \n m·\f x·n f(m f x).*)
 Definition padd : pnat -> pnat -> pnat := fun n m => fun f x => n f (m f x ).
-(* 2 + 3 = 5 *)
-Compute padd p2 p3.
+(* 2 + 2 = 4 *)
+Compute padd p2 p2.
 (*Definition cmult := \n m · \f· n(m f).*)
 Definition pmult : pnat -> pnat -> pnat := fun m n =>  fun T:Set => (fun f => n T (m T f)).
 (* 2 X 3 = 6 *)
