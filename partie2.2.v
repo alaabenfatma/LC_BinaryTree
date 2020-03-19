@@ -135,4 +135,22 @@ Compute pplus p1 p3.
 (*prédécesseur : We did not implement it... No time :-( *)
 
 (* 2.2.5  Listes (bonus) *)
+(*On a fait que la premiere question.*)
+(*listen = ∀T, T→(pnat→T→T)→T.*)
+Definition listen : Set := forall T: Set, T -> (pnat -> T -> T) -> T.
+(*liste A = ∀T, T→(A→T→T)→T.*)
+(*L'espace entre liste et A EST MANDATORY.*) 
+Definition liste A : Set := forall T: Set, T -> (A -> T -> T) -> T.
+(*pnil A :liste A = ΛT.λxTcA→T→T.x*)
+Definition pnil A : liste A := fun T:Set => fun x : T => fun c : (A -> T -> T) =>x.
+(*pcons A :  A→ liste A →liste A = λaAq liste A.ΛT.λxTcA→T→T.c a(qTx c).*)
+Definition pcons A : A -> liste A -> liste A :=  fun (a : A) (q : liste A) => fun T: Set => fun (x:T) (c : A -> T -> T)=> c a (q T x c).
 
+
+(*2.2.6  Super bonus : arbres binaires et tri par arbre binaire de recherche*)
+(*Reference*)
+Definition arbin (A : Set) := forall T: Set, T -> (T -> A -> T -> T) -> T.
+(*arbre Vide.*)
+Definition pV (A:Set) := fun T:Set=> fun x : T => fun c : T -> A -> T -> T=> x.
+(*le nœud comprenant un sous-arbre gauche, un habitant de A et un sous-arbre droit*)
+Definition pN (A : Set):= fun (g : arbin A) (a : A) (d : arbin A) => fun T : Set  => fun(x : T) (c : T -> A -> T -> T) => c (g T x c) a (d T x c ). 
