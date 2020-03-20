@@ -1,5 +1,5 @@
 
-(*partie1*)
+(*partie1 *)
 
 Require Import untypedLC.
 
